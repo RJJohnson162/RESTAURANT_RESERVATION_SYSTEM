@@ -5,6 +5,7 @@ import axios from "axios";
 import { DotLoader } from "react-spinners";
 import styled from "styled-components";
 
+// Styled components
 const Card = styled.span`
   display: flex;
   justify-content: center;
