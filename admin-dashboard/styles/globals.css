@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+img {
+  max-height: 100%;
+}
+input,
+textarea,
+select {
+  @apply border border-primary rounded-md px-1 w-full py-2;
+  @apply mb-2;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  @apply border-slate-700;
+}
+h1 {
+  @apply text-sky-900 mb-4 text-xl;
+}
+label {
+  @apply text-blue-950 text-sm;
+}
+.btn-primary {
+  @apply bg-slate-100 text-zinc-950 border-primary border-2 px-4 py-1 rounded-full shadow-sm;
+  transition: ease-in 0.3s;
+  -webkit-transition: ease-in 0.3s;
+  -moz-transition: ease-in 0.3s;
+  -ms-transition: ease-in 0.3s;
+  -o-transition: ease-in 0.3s;
+}
+
+.btn-primary:hover {
+  @apply bg-primary text-white;
+}
+
+table.basic {
+  @apply w-full bg-primary rounded-md shadow-md;
+}
+table.Basic {
+  @apply w-full bg-primary rounded-md shadow-md;
+}
+table.basic thead tr td,
+table.basic thead tr th {
+  @apply text-sm text-amber-300 uppercase  px-4 py-2;
+}
+table.Basic thead tr td,
+table.Basic thead tr th {
+  @apply text-sm text-black bg-highlight uppercase  px-4 py-2;
+}
+table.basic tr td {
+  @apply px-4 py-1;
+}
+table.basic tr {
+  border-bottom: 1px solid #eceff6;
+}
+table.Basic tr {
+  border-bottom: 1px solid #eceff6;
+}
+table.Basic tr td {
+  @apply px-4 py-1;
+}
+table.basic a {
+  @apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
+}
+.btn-default,
+.btn-red {
+  @apply px-4 py-1;
+  transition: ease-in 0.3s;
+  -webkit-transition: ease-in 0.3s;
+  -moz-transition: ease-in 0.3s;
+  -ms-transition: ease-in 0.3s;
+  -o-transition: ease-in 0.3s;
+}
+.btn-red {
+  @apply bg-primary text-white shadow-sm rounded-full;
+  border: 1px solid #14213d;
+}
+.btn-red:hover {
+  @apply text-amber-300 border-amber-300;
+  border: 1px solid;
+}
+
+.btn-default {
+  @apply bg-primary text-white border-2 shadow-sm rounded-full;
+  border: 1px solid #14213d;
+}
+.btn-default:hover {
+  @apply bg-primary hover:text-white border-white;
+  border: 1px solid;
+}
+/* Change the width and height of the scrollbar */
+::-webkit-scrollbar {
+  width: 5px; /* Width of the vertical scrollbar */
+  height: 5px; /* Height of the horizontal scrollbar */
+  border: 1px solid #88888830;
+}
+/* Style the scrollbar corner */
+::-webkit-scrollbar-corner {
+  background-color: #f1f1f1; /* Change the background color of the corner */
+}
+/* Style the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #000000d5; /* Change the background color of the thumb */
+}
+/* Style the scrollbar track */
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Change the background color */
+}
+
+.glass {
+  backdrop-filter: blur(2px);
+  background-color: primary;
+}
+
+.pic-outline {
+  background-image: url(/tech-xpress/pages/index-Image.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.hover {
+  cursor: pointer;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+}
+.hover:hover {
+  background-color: white;
+  color: rgb(0, 51, 128);
+  border: 1px solid rgb(1, 17, 70);
+}
+
+.float {
+  box-shadow: 5px 10px 15px #9c999888, 5px 5px 10px #b8b4b4a4,
+    -5px -5px 15px #9c999888, -5px -5px 10px #b8b4b4a4;
+}
