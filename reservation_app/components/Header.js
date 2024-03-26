@@ -100,8 +100,12 @@ const NavButton = styled.button`
 `;
 
 export default function Header() {
-  const { cartItems } = useContext(CartContext);
+  const { cartData } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
+
+  // Get the lengths of cuisines and seats arrays to display the total cart count
+  const cartCount = cartData.cuisines.length + cartData.seats.length;
+
   return (
     <StyledHeader>
       <Center>
@@ -115,8 +119,7 @@ export default function Header() {
             <NavLink href={"/Foods"}>Foods</NavLink>
             <NavLink href={"/seatingOptions"}>Seat Options</NavLink>
             <NavLink href={"/cart"}>
-              Cart{" "}
-              {cartItems ? <CartCircle>{cartItems.length}</CartCircle> : null}
+              Cart {cartCount > 0 ? <CartCircle>{cartCount}</CartCircle> : null}
             </NavLink>
           </StyledNav>
           <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>

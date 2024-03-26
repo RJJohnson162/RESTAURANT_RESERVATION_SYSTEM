@@ -7,7 +7,7 @@ const Image = styled.img`
 `;
 const BigImage = styled.img`
   max-width: 100%;
-  max-height: 200px;
+  max-height: 100%;
 `;
 const ImageButtons = styled.div`
   display: flex;
@@ -16,17 +16,17 @@ const ImageButtons = styled.div`
   margin-top: 10px;
 `;
 const ImageButton = styled.div`
-  border: 2px solid #ccc;
+  border: 2px solid #f7418f;
   ${(props) =>
     props.active
       ? `
-      border-color: #ccc;
+      border-color: #f7418f;
     `
       : `
       border-color: transparent;
     `}
   height: 40px;
-  padding: 2px;
+  padding: 1px;
   cursor: pointer;
   border-radius: 5px;
 `;

@@ -5,7 +5,7 @@ const Glow = styled.div`
     transform: scale(1.6);
     transition: 0.4s;
     &:hover {
-      color: #11c241;
+      color: #fff;
       transform: scale(1.8) translateY(-1px) translateX(-1px);
     }
   }

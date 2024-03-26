@@ -9,6 +9,7 @@ export default function SeatOptionsForm({
   title: existingTitle,
   description: existingDescription,
   tally: existingTally,
+  price: existingPrice,
   images: existingImages,
   category: assignedCategory,
   properties: assignedProperties,
@@ -19,6 +20,7 @@ export default function SeatOptionsForm({
   const [seatOptionsProperties, setSeatOptionProperties] = useState(
     assignedProperties || {}
   );
+  const [price, setPrice] = useState(existingPrice || "");
   const [tally, setTally] = useState(existingTally || "");
   const [images, setImages] = useState(existingImages || []);
   const [goToCuisine, setGotoCuisine] = useState(false);
@@ -44,8 +46,13 @@ export default function SeatOptionsForm({
     ev.preventDefault();
 
     // Validation: Check if title and price are empty
-    if (!title.trim() || !tally.toString().trim() || !category.trim()) {
-      handleError("Title, Tally and Category are required fields.");
+    if (
+      !title.trim() ||
+      !tally.toString().trim() ||
+      !price.toString().trim() ||
+      !category.trim()
+    ) {
+      handleError("Title,Price, Tally and Category are required fields.");
       return;
     }
 
@@ -53,6 +60,7 @@ export default function SeatOptionsForm({
       title,
       description,
       tally,
+      price,
       images,
       category,
       properties: seatOptionsProperties,
@@ -297,6 +305,16 @@ export default function SeatOptionsForm({
         value={tally}
         onChange={(ev) => {
           setTally(ev.target.value);
+          handleChange(); // Track form changes
+        }}
+      />
+      <label>Price</label>
+      <input
+        type="number"
+        placeholder="Price"
+        value={price}
+        onChange={(ev) => {
+          setPrice(ev.target.value);
           handleChange(); // Track form changes
         }}
       />

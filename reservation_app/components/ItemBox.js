@@ -19,7 +19,6 @@ const ItemsWrapper = styled.div`
 
 const BlackBox = styled(Link)`
   background-color: transparent;
-  padding: 20px;
   height: 120px;
   text-align: center;
   display: flex;

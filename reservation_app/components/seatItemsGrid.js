@@ -3,7 +3,8 @@ import SeatItemBox from "@/components/seatItemBox";
 
 const StyledItemsGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 20px;
   @media screen and (min-width: 540px) and (max-width: 821px) {

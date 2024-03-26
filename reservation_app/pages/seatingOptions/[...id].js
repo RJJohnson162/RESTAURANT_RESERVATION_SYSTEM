@@ -25,19 +25,19 @@ const PriceRow = styled.div`
   gap: 20px;
   align-items: center;
 `;
-const Tally = styled.span`
+const Price = styled.span`
   font-size: 1.4rem;
-  color: #11c241;
+  color: #f7418f;
 `;
 const Bg = styled.div`
   background-color: #eeeeee;
-  color: #eeeeee;
+  color: #00000;
   padding: 50px 0;
   min-height: 100vh;
 `;
 
 export default function ItemPage({ seats }) {
-  const { addItem } = useContext(CartContext);
+  const { addSeat } = useContext(CartContext);
   return (
     <>
       <Header />
@@ -52,10 +52,14 @@ export default function ItemPage({ seats }) {
               <p>{seats.description}</p>
               <PriceRow>
                 <div>
-                  <Tally>Kshs. {seats.tally}</Tally>
+                  <Price>Kshs.{seats.price}</Price>
                 </div>
                 <div>
-                  <Button primary={0} onClick={() => addItem(seats._id)}>
+                  <Button
+                    primary={1}
+                    outline={1}
+                    onClick={() => addSeat(seats._id)}
+                  >
                     <CartIcon />
                     Add to cart
                   </Button>

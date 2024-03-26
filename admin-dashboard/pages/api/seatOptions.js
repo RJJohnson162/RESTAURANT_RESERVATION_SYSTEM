@@ -16,12 +16,13 @@ export default async function handle(req, res) {
   }
 
   if (method === "POST") {
-    const { title, description, tally, images, category, properties } =
+    const { title, description, tally, price, images, category, properties } =
       req.body;
     const SeatingOptionsDoc = await SeatOptions.create({
       title,
       description,
       tally,
+      price,
       images,
       category,
       properties,
@@ -30,11 +31,19 @@ export default async function handle(req, res) {
   }
 
   if (method === "PUT") {
-    const { title, description, tally, images, category, properties, _id } =
-      req.body;
+    const {
+      title,
+      description,
+      tally,
+      price,
+      images,
+      category,
+      properties,
+      _id,
+    } = req.body;
     await SeatOptions.updateOne(
       { _id },
-      { title, description, tally, images, category, properties }
+      { title, description, tally, price, images, category, properties }
     );
     res.json(true);
   }

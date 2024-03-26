@@ -27,17 +27,17 @@ const PriceRow = styled.div`
 `;
 const Price = styled.span`
   font-size: 1.4rem;
-  color: #11c241;
+  color: #f7418f;
 `;
 const Bg = styled.div`
   background-color: #eeeeee;
-  color: #eeeeee;
+  color: #00000;
   padding: 50px 0;
   min-height: 100vh;
 `;
 
 export default function ItemPage({ cuisine }) {
-  const { addItem } = useContext(CartContext);
+  const { addCuisine } = useContext(CartContext);
   return (
     <>
       <Header />
@@ -55,7 +55,11 @@ export default function ItemPage({ cuisine }) {
                   <Price>Kshs. {cuisine.price}</Price>
                 </div>
                 <div>
-                  <Button primary={0} onClick={() => addItem(cuisine._id)}>
+                  <Button
+                    primary={1}
+                    outline={1}
+                    onClick={() => addCuisine(cuisine._id)}
+                  >
                     <CartIcon />
                     Add to cart
                   </Button>

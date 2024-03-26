@@ -19,7 +19,6 @@ const ItemsWrapper = styled.div`
 
 const BlackBox = styled(Link)`
   background-color: #eeeeee;
-  padding: 20px;
   height: 120px;
   text-align: center;
   display: flex;
@@ -77,8 +76,8 @@ const Price = styled.div`
   }
 `;
 
-export default function SeatItemBox({ _id, title, tally, images }) {
-  const { addSeats } = useContext(CartContext);
+export default function SeatItemBox({ _id, title, price, images }) {
+  const { addSeat } = useContext(CartContext);
   const url = "/seatingOptions/" + _id;
   return (
     <ItemsWrapper>
@@ -90,8 +89,8 @@ export default function SeatItemBox({ _id, title, tally, images }) {
       <ItemInfoBox>
         <Title href={url}>{title}</Title>
         <PriceRow>
-          <Price>Tables {tally}</Price>
-          <Button block onClick={() => addSeats(_id)} primary>
+          <Price>Kshs. {price}</Price>
+          <Button block onClick={() => addSeat(_id)} primary>
             <CartIcon />
             Add to cart
           </Button>
