@@ -71,7 +71,7 @@ const CityHolder = styled.div`
 `;
 
 export default function CartPage() {
-  const { cartData, addCuisine, removeItem, addSeat, clearCart } =
+  const { cartData, addCuisine, addSeat, removeItem, clearCart } =
     useContext(CartContext);
   const [cuisineItems, setCuisineItems] = useState([]);
   const [seatItems, setSeatItems] = useState([]);
@@ -88,7 +88,8 @@ export default function CartPage() {
       axios
         .post("/api/cart", { ids: cartData.cuisines })
         .then((response) => {
-          setCuisineItems(response.data);
+          console.log("CartCuisines", response);
+          setCuisineItems(response.data.cuisines);
         })
         .catch((error) => {
           console.error("Error fetching cart cuisine data:", error);
@@ -98,10 +99,12 @@ export default function CartPage() {
     }
 
     if (cartData && cartData.seats && cartData.seats.length > 0) {
+      console.log("Seats", cartData.seats);
       axios
-        .post("/api/cart/seats", { ids: cartData.seats })
+        .post("/api/cart", { ids: cartData.seats })
         .then((response) => {
-          setSeatItems(response.data);
+          console.log("CartSeats", response);
+          setSeatItems(response.data.seats);
         })
         .catch((error) => {
           console.error("Error fetching cart seat data:", error);
@@ -110,6 +113,10 @@ export default function CartPage() {
       setSeatItems([]);
     }
   }, [cartData]);
+  console.log("cartData", JSON.stringify(cartData));
+
+  console.log("seatItems", JSON.stringify(seatItems));
+  console.log("cuisineItems", JSON.stringify(cuisineItems));
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -120,11 +127,20 @@ export default function CartPage() {
       clearCart();
     }
   }, []);
+
   let total = 0;
+  // Calculate total price for cuisine items
   for (const cuisine of cuisineItems) {
     total +=
       (cartData?.cuisines?.filter((id) => id === cuisine._id).length || 0) *
       cuisine.price;
+  }
+
+  // Calculate total price for seat items
+  for (const seat of seatItems) {
+    total +=
+      (cartData?.seats?.filter((id) => id === seat._id).length || 0) *
+      seat.price;
   }
 
   function moreOfThisProduct(id, type) {
@@ -133,13 +149,22 @@ export default function CartPage() {
       if (cuisineToAdd) {
         addCuisine(id);
       }
+    } else if (type === "seats") {
+      const seatToAdd = seatItems.find((item) => item._id === id);
+      if (seatToAdd) {
+        addSeat(id);
+      }
     }
   }
 
   function lessOfThisProduct(id, type) {
     if (type === "cuisines") {
       removeItem(id);
-    } else if (type === "seats") {
+    }
+  }
+
+  function lessOfThisSeat(id, type) {
+    if (type === "seats") {
       removeItem(id);
     }
   }
@@ -157,11 +182,6 @@ export default function CartPage() {
     if (response.data.url) {
       window.location = response.data.url;
     }
-  }
-
-  for (const seat of seatItems) {
-    // Calculate total price for seat items
-    total += seat.price;
   }
 
   if (isSuccess) {
@@ -192,8 +212,11 @@ export default function CartPage() {
             <Box>
               <h2>Cart</h2>
               {!cuisineItems.length && !seatItems.length && (
-                <div>Your cart is empty</div>
+                <>
+                  <div>Your cart is empty</div>
+                </>
               )}
+
               {(cuisineItems.length > 0 || seatItems.length > 0) && (
                 <Table>
                   <thead>
@@ -255,7 +278,7 @@ export default function CartPage() {
                         </ProductInfoCell>
                         <td>
                           <Button
-                            onClick={() => lessOfThisProduct(seat._id, "seats")}
+                            onClick={() => lessOfThisSeat(seat._id, "seats")}
                           >
                             -
                           </Button>
@@ -272,11 +295,9 @@ export default function CartPage() {
                           </Button>
                         </td>
                         <td>
-                          Tables booked{" "}
-                          {
-                            cartData?.seats?.filter((id) => id === seat._id)
-                              .length
-                          }
+                          Kshs.{" "}
+                          {cartData?.seats?.filter((id) => id === seat._id)
+                            .length * seat.price}
                         </td>
                       </tr>
                     ))}
@@ -291,7 +312,7 @@ export default function CartPage() {
             </Box>
             {!!(cuisineItems.length || seatItems.length) && (
               <Box>
-                <h2>Reservation information</h2>
+                <h2>Order information</h2>
                 <Input
                   type="text"
                   placeholder="Name"
@@ -306,24 +327,17 @@ export default function CartPage() {
                   name="email"
                   onChange={(ev) => setEmail(ev.target.value)}
                 />
-                <Input
-                  type="text"
-                  placeholder="Telephone number"
-                  value={country}
-                  name="country"
-                  onChange={(ev) => setCountry(ev.target.value)}
-                />
                 <CityHolder>
                   <Input
                     type="text"
-                    placeholder="Arrival time"
+                    placeholder="City"
                     value={city}
                     name="city"
                     onChange={(ev) => setCity(ev.target.value)}
                   />
                   <Input
                     type="text"
-                    placeholder="Departure Time"
+                    placeholder="Postal Code"
                     value={postalCode}
                     name="postalCode"
                     onChange={(ev) => setPostalCode(ev.target.value)}
@@ -331,10 +345,17 @@ export default function CartPage() {
                 </CityHolder>
                 <Input
                   type="text"
-                  placeholder="Date"
+                  placeholder="Street Address"
                   value={streetAddress}
                   name="streetAddress"
                   onChange={(ev) => setStreetAddress(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Country"
+                  value={country}
+                  name="country"
+                  onChange={(ev) => setCountry(ev.target.value)}
                 />
                 <Button block onClick={goToPayment}>
                   Continue to payment

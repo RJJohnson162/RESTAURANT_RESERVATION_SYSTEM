@@ -30,10 +30,12 @@ const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 30px;
+  padding: 0 50px 0 50px;
   div:nth-child(1) {
     order: 2;
   }
   @media screen and (min-width: 768px) {
+    padding: 0 25px 0 25px;
     grid-template-columns: 1.1fr 0.9fr;
     div:nth-child(1) {
       order: 0;
