@@ -7,6 +7,10 @@ const StyledInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
+
+  &:not(:arrival Time) {
+    color: black;
+  }
 `;
 
 export default function Input(props) {

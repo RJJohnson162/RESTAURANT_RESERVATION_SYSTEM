@@ -1,12 +1,12 @@
+import { useEffect, useState, useContext } from "react";
+import axios from "axios";
 import Header from "@/components/Header";
 import styled from "styled-components";
 import Center from "@/components/Center";
 import Button from "@/components/Button";
-import { useContext, useEffect, useState } from "react";
-import { CartContext } from "@/components/CartContext";
-import axios from "axios";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
+import { CartContext } from "@/components/CartContext";
 
 const Bg = styled.div`
   background-color: #f7418f;
@@ -84,39 +84,32 @@ export default function CartPage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    if (cartData && cartData.cuisines && cartData.cuisines.length > 0) {
-      axios
-        .post("/api/cart", { ids: cartData.cuisines })
-        .then((response) => {
-          console.log("CartCuisines", response);
+    const fetchData = async () => {
+      try {
+        if (cartData && cartData.cuisines && cartData.cuisines.length > 0) {
+          const response = await axios.post("/api/cart", {
+            ids: cartData.cuisines,
+          });
           setCuisineItems(response.data.cuisines);
-        })
-        .catch((error) => {
-          console.error("Error fetching cart cuisine data:", error);
-        });
-    } else {
-      setCuisineItems([]);
-    }
+        } else {
+          setCuisineItems([]);
+        }
 
-    if (cartData && cartData.seats && cartData.seats.length > 0) {
-      console.log("Seats", cartData.seats);
-      axios
-        .post("/api/cart", { ids: cartData.seats })
-        .then((response) => {
-          console.log("CartSeats", response);
+        if (cartData && cartData.seats && cartData.seats.length > 0) {
+          const response = await axios.post("/api/cart", {
+            ids: cartData.seats,
+          });
           setSeatItems(response.data.seats);
-        })
-        .catch((error) => {
-          console.error("Error fetching cart seat data:", error);
-        });
-    } else {
-      setSeatItems([]);
-    }
-  }, [cartData]);
-  console.log("cartData", JSON.stringify(cartData));
+        } else {
+          setSeatItems([]);
+        }
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
 
-  console.log("seatItems", JSON.stringify(seatItems));
-  console.log("cuisineItems", JSON.stringify(cuisineItems));
+    fetchData();
+  }, [cartData]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -128,22 +121,17 @@ export default function CartPage() {
     }
   }, []);
 
-  let total = 0;
-  // Calculate total price for cuisine items
-  for (const cuisine of cuisineItems) {
-    total +=
-      (cartData?.cuisines?.filter((id) => id === cuisine._id).length || 0) *
-      cuisine.price;
-  }
+  const calculateTotalPrice = (items, itemType) => {
+    let total = 0;
+    for (const item of items) {
+      total +=
+        (cartData?.[itemType]?.filter((id) => id === item._id).length || 0) *
+        item.price;
+    }
+    return total;
+  };
 
-  // Calculate total price for seat items
-  for (const seat of seatItems) {
-    total +=
-      (cartData?.seats?.filter((id) => id === seat._id).length || 0) *
-      seat.price;
-  }
-
-  function moreOfThisProduct(id, type) {
+  const moreOfThisProduct = (id, type) => {
     if (type === "cuisines") {
       const cuisineToAdd = cuisineItems.find((item) => item._id === id);
       if (cuisineToAdd) {
@@ -155,34 +143,37 @@ export default function CartPage() {
         addSeat(id);
       }
     }
-  }
+  };
 
-  function lessOfThisProduct(id, type) {
+  const lessOfThisProduct = (id, type) => {
     if (type === "cuisines") {
       removeItem(id);
-    }
-  }
-
-  function lessOfThisSeat(id, type) {
-    if (type === "seats") {
+    } else if (type === "seats") {
       removeItem(id);
     }
-  }
+  };
 
-  async function goToPayment() {
-    const response = await axios.post("/api/checkout", {
-      name,
-      email,
-      city,
-      postalCode,
-      streetAddress,
-      country,
-      cartData,
-    });
-    if (response.data.url) {
-      window.location = response.data.url;
+  const goToPayment = async () => {
+    try {
+      const response = await axios.post("/api/checkout", {
+        name,
+        email,
+        city,
+        postalCode,
+        streetAddress,
+        country,
+        cartData,
+      });
+
+      if (response.data.url) {
+        window.location = response.data.url;
+      } else {
+        console.error("No redirect URL found in the response:", response.data);
+      }
+    } catch (error) {
+      console.error("An error occurred while processing the payment:", error);
     }
-  }
+  };
 
   if (isSuccess) {
     clearCart();
@@ -212,22 +203,18 @@ export default function CartPage() {
             <Box>
               <h2>Cart</h2>
               {!cuisineItems.length && !seatItems.length && (
-                <>
-                  <div>Your cart is empty</div>
-                </>
+                <div>Your cart is empty</div>
               )}
-
               {(cuisineItems.length > 0 || seatItems.length > 0) && (
                 <Table>
                   <thead>
                     <tr>
-                      <th>Product</th>
+                      <th>Item</th>
                       <th>Quantity</th>
                       <th>Price</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Render cuisine items */}
                     {cuisineItems.map((cuisine) => (
                       <tr key={cuisine._id}>
                         <ProductInfoCell>
@@ -267,18 +254,17 @@ export default function CartPage() {
                         </td>
                       </tr>
                     ))}
-                    {/* Render seat items */}
                     {seatItems.map((seat) => (
                       <tr key={seat._id}>
                         <ProductInfoCell>
                           <ProductImageBox>
-                            <img src={seat.image} alt="" />
+                            <img src={seat.images[0]} alt="" />
                           </ProductImageBox>
                           {seat.title}
                         </ProductInfoCell>
                         <td>
                           <Button
-                            onClick={() => lessOfThisSeat(seat._id, "seats")}
+                            onClick={() => lessOfThisProduct(seat._id, "seats")}
                           >
                             -
                           </Button>
@@ -304,7 +290,11 @@ export default function CartPage() {
                     <tr>
                       <td></td>
                       <td></td>
-                      <td>Kshs. {total}</td>
+                      <td>
+                        Kshs.{" "}
+                        {calculateTotalPrice(cuisineItems, "cuisines") +
+                          calculateTotalPrice(seatItems, "seats")}
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
@@ -312,7 +302,7 @@ export default function CartPage() {
             </Box>
             {!!(cuisineItems.length || seatItems.length) && (
               <Box>
-                <h2>Order information</h2>
+                <h2>RESERVATION</h2>
                 <Input
                   type="text"
                   placeholder="Name"
@@ -327,37 +317,37 @@ export default function CartPage() {
                   name="email"
                   onChange={(ev) => setEmail(ev.target.value)}
                 />
+                <Input
+                  type="tel"
+                  placeholder="Telephone Number"
+                  value={country}
+                  name="country"
+                  onChange={(ev) => setCountry(ev.target.value)}
+                />
                 <CityHolder>
                   <Input
-                    type="text"
-                    placeholder="City"
+                    type="time"
+                    placeholder=" "
                     value={city}
                     name="city"
                     onChange={(ev) => setCity(ev.target.value)}
                   />
                   <Input
-                    type="text"
-                    placeholder="Postal Code"
+                    type="time"
+                    placeholder="Departure Time"
                     value={postalCode}
                     name="postalCode"
                     onChange={(ev) => setPostalCode(ev.target.value)}
                   />
                 </CityHolder>
                 <Input
-                  type="text"
-                  placeholder="Street Address"
+                  type="date"
+                  placeholder="Date"
                   value={streetAddress}
                   name="streetAddress"
                   onChange={(ev) => setStreetAddress(ev.target.value)}
                 />
-                <Input
-                  type="text"
-                  placeholder="Country"
-                  value={country}
-                  name="country"
-                  onChange={(ev) => setCountry(ev.target.value)}
-                />
-                <Button block onClick={goToPayment}>
+                <Button block primary={1} onClick={goToPayment}>
                   Continue to payment
                 </Button>
               </Box>

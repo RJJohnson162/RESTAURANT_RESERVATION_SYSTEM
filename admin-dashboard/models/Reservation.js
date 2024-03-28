@@ -5,8 +5,10 @@ const ReservationSchema = new Schema(
     line_items: Object,
     name: String,
     email: String,
-    phone: String,
-    city: String,
+    city: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    streetAddress: String,
+    country: String,
     paid: Boolean,
   },
   {
@@ -14,5 +16,5 @@ const ReservationSchema = new Schema(
   }
 );
 
-export const Reservations =
-  models?.Reservations || model("Reservations", ReservationSchema);
+export const Reservation =
+  models?.Reservation || model("Reservation", ReservationSchema);
